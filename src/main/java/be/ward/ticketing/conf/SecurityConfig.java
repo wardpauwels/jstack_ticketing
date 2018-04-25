@@ -2,14 +2,18 @@ package be.ward.ticketing.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @Configuration
@@ -23,6 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
     private final DataSource dataSource;
 
+    @Resource
+    private CORSFilter corsFilter;
+
     @Autowired
     public SecurityConfig(PasswordEncoder passwordEncoder,
                           @Qualifier("dataSource") DataSource dataSource) {
@@ -33,22 +40,35 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(corsFilter, ChannelProcessingFilter.class)
                 .authorizeRequests()
-                .antMatchers("/tickets", "/login")
-                .permitAll();
-        http
+                .antMatchers("/login", "/tickets")
+                .permitAll()
+                .and()
                 .authorizeRequests()
-                .antMatchers("/**")
-                .hasAuthority("ADMIN");
-        http
-                .formLogin()                // login
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/index");
-        http
+                .antMatchers(HttpMethod.POST, "/tickets")
+                .permitAll()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/*")
+                .hasAuthority("ADMIN")
+                .and()
+                .formLogin()                //login
+                .loginPage("/login")
+                .permitAll()
+                .and()
                 .logout()                   // logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/index");
-        http.csrf().disable();
+                .logoutSuccessUrl("/index")
+                .and()
+                .cors()
+                .and()
+                .csrf().disable();
+    }
+
+    @Bean
+    public CORSFilter corsFilter() {
+        return new CORSFilter();
     }
 
     @Autowired
