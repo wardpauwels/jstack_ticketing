@@ -56,7 +56,7 @@ public class UserControllerTest {
         User userBert = new User("bert", "hackerman");
         when(userService.createUser("bert", "hackerman")).thenReturn(userBert);
 
-        User user = userController.makeNewUser("bert", "hackerman");
+        User user = userController.makeNewUser(new User("bert", "hackerman"));
 
         assertNotNull(user);
         assertEquals(userBert.getUsername(), user.getUsername());

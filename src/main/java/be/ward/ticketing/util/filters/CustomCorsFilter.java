@@ -1,7 +1,5 @@
 package be.ward.ticketing.util.filters;
 
-import be.ward.ticketing.conf.csrf.CSRF;
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +38,7 @@ public class CustomCorsFilter implements Filter {
 
             // Access-Control-Allow-Headers
             response.setHeader("Access-Control-Allow-Headers",
-                    "Origin, X-Requested-With, Authorization, Content-Type, Accept, " + CSRF.REQUEST_HEADER_NAME);
+                    "Origin, X-Requested-With, Authorization, Content-Type, Accept");
         }
         chain.doFilter(req, res);
     }

@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User makeNewUser(@RequestParam String username, @RequestParam String password) {
-        return userService.createUser(username, password);
+    public User makeNewUser(@RequestBody User user) {
+        return userService.createUser(user.getUsername(), user.getPassword());
     }
 }

@@ -55,11 +55,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/login").permitAll()
 //                .antMatchers("/logout").authenticated()
 //                .antMatchers("/**").hasAuthority("ADMIN");
-        http.authorizeRequests().antMatchers("/**").permitAll();
+        http.authorizeRequests().antMatchers("/login").permitAll();
 
         // Handlers and entry points
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
-        http.formLogin().loginPage("/login").permitAll();
         http.formLogin().successHandler(authenticationSuccessHandler);
         http.formLogin().failureHandler(authenticationFailureHandler);
 
@@ -72,7 +71,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //CSRF
         http.csrf().disable();
-//        http.addFilterAfter(new CsrfTokenResponseCookieBindingFilter(), CsrfFilter.class); // CSRF tokens handling
 
         // filter for JSON format
     }
