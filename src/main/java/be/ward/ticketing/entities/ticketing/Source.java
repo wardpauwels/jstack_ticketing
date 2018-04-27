@@ -1,7 +1,12 @@
 package be.ward.ticketing.entities.ticketing;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@Data
+@NoArgsConstructor
 @Entity(name = "source")
 public class Source {
 
@@ -16,30 +21,7 @@ public class Source {
     @Column(name = "name")
     private String name;
 
-    public Source() {
-    }
-
-    public Source(Long sourceId) {
-        this.id = sourceId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Integer getLockVersion() {
-        return lockVersion;
-    }
-
-    public void setLockVersion(Integer lockVersion) {
-        this.lockVersion = lockVersion;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public Source(long id) {
+        this.id = id;
     }
 }

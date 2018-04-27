@@ -1,4 +1,6 @@
-package be.ward.ticketing.conf;
+package be.ward.ticketing.util.filters;
+
+import be.ward.ticketing.conf.csrf.CSRF;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -7,7 +9,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class CORSFilter implements Filter {
+public class CustomCorsFilter implements Filter {
 
     // This is to be replaced with a list of domains allowed to access the server
     private final List<String> allowedOrigins = Arrays.asList("http://localhost:8080", "http://127.0.0.1:8080", "http://localhost:4200", "http://127.0.0.1:4200");
@@ -34,13 +36,12 @@ public class CORSFilter implements Filter {
             response.setHeader("Access-Control-Allow-Credentials", "true");
 
             // Access-Control-Allow-Methods
-            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, DELETE");
 
             // Access-Control-Allow-Headers
             response.setHeader("Access-Control-Allow-Headers",
-                    "Origin, X-Requested-With, Content-Type, Accept, X-CSRF-TOKEN");
+                    "Origin, X-Requested-With, Authorization, Content-Type, Accept, " + CSRF.REQUEST_HEADER_NAME);
         }
-
         chain.doFilter(req, res);
     }
 

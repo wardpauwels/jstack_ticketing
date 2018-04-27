@@ -1,7 +1,12 @@
 package be.ward.ticketing.entities.ticketing;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@Data
+@NoArgsConstructor
 @Entity(name = "domain")
 public class Domain {
 
@@ -16,31 +21,7 @@ public class Domain {
     @Column(name = "name")
     private String name;
 
-    public Domain() {
-    }
-
     public Domain(Long domainId) {
         this.id = domainId;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Integer getLockVersion() {
-        return lockVersion;
-    }
-
-    public void setLockVersion(Integer lockVersion) {
-        this.lockVersion = lockVersion;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
 }

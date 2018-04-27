@@ -39,5 +39,4 @@ public class UserController {
     public User makeNewUser(@RequestParam String username, @RequestParam String password) {
         return userService.createUser(username, password);
     }
-
 }

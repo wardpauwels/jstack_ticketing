@@ -1,7 +1,10 @@
 package be.ward.ticketing.entities.user;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
+@Data
 @Entity(name = "role")
 public class Role {
 
@@ -12,16 +15,4 @@ public class Role {
 
     @Column(name = "role")
     private String role;
-
-    public int getId() {
-        return id;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }

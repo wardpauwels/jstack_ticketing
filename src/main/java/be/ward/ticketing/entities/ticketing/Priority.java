@@ -1,7 +1,12 @@
 package be.ward.ticketing.entities.ticketing;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@Data
+@NoArgsConstructor
 @Entity(name = "priority")
 public class Priority {
 
@@ -16,30 +21,7 @@ public class Priority {
     @Column(name = "name")
     private String name;
 
-    public Priority() {
-    }
-
     public Priority(Long priorityId) {
         this.id = priorityId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Integer getLockVersion() {
-        return lockVersion;
-    }
-
-    public void setLockVersion(Integer lockVersion) {
-        this.lockVersion = lockVersion;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }
