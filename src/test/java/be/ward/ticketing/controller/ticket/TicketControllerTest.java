@@ -6,6 +6,7 @@ import be.ward.ticketing.service.ticket.AssociationService;
 import be.ward.ticketing.service.ticket.TicketService;
 import be.ward.ticketing.util.ticket.AssociationTypes;
 import be.ward.ticketing.util.ticket.TicketStatus;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -130,7 +131,7 @@ public class TicketControllerTest {
         when(ticketService.createTicket("Bert", "Mijn lampen werken niet.")).thenReturn(firstTicket);
         when(associationService.createAssociation(AssociationTypes.ticket, firstTicket)).thenReturn(firstAssociation);
 
-        Ticket addedTicket = ticketController.createNewTicket("Bert", "Mijn lampen werken niet.");
+        Ticket addedTicket = ticketController.createNewTicket(new JSONObject("{'username':'Bert','message':'Mijn lampen werken niet.'}"));
 
         assertNotNull(addedTicket);
         assertEquals(firstTicket.getCreator(), addedTicket.getCreator());
@@ -149,7 +150,7 @@ public class TicketControllerTest {
         when(associationService.getLastAssociationFromTicket(firstTicket)).thenReturn(firstAssociation);
         when(ticketService.answerOnTicketWithId(firstAssociation.getTicket().getId(), "Flor", "Steek de stekker in.")).thenReturn(secondTicket);
 
-        Ticket ticket = ticketController.answerOnTicketWithId(String.valueOf(firstTicket.getId()), "Flor", "Steek de stekker in.");
+        Ticket ticket = ticketController.answerOnTicketWithId(String.valueOf(firstTicket.getId()), new JSONObject("'user':'Flor','answer':'Steek de stekker in.'"));
 
         assertNotNull(ticket);
 
@@ -175,7 +176,7 @@ public class TicketControllerTest {
     public void ticketNotSolvedTest() {
         when(ticketService.findTicket(secondTicket.getId())).thenReturn(secondTicket);
         when(associationService.getTopAssociationFromTicket(secondTicket)).thenReturn(firstAssociation);
-        Ticket ticket = ticketController.ticketNotSolved(String.valueOf(secondTicket.getId()), "De stekker steekt in.");
+        Ticket ticket = ticketController.ticketNotSolved(String.valueOf(secondTicket.getId()), new JSONObject("{'comment':'De stekker steekt in.'}"));
 
         assertNotNull(ticket);
         assertEquals(firstTicket.getId(), ticket.getId());

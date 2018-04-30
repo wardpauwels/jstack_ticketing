@@ -35,7 +35,7 @@ public class AssignControllerTest {
         ticket.setAssignedUser("Kurt");
         when(assignService.addResolverToTicket(1L, "Kurt")).thenReturn(ticket);
 
-        String askedAnswer = assignController.assignUserToTicket("1", "Kurt");
+        String askedAnswer = assignController.assignUserToTicket(new JSONObject("{'ticketId':'1','assignedUser':'Kurt'}"));
         JSONObject jsonAnswer = new JSONObject(askedAnswer);
         assertEquals("User has been added to ticket", jsonAnswer.getString("result"));
     }
@@ -47,7 +47,7 @@ public class AssignControllerTest {
         ticket.setAssignedUser("Pieter");
         when(assignService.addResolverToTicket(1L, "Pieter")).thenReturn(null);
 
-        String askedAnswer = assignController.assignUserToTicket("1", "Pieter");
+        String askedAnswer = assignController.assignUserToTicket(new JSONObject("{'ticketId':'1','assignedUser':'Pieter'}"));
         JSONObject jsonAnswer = new JSONObject(askedAnswer);
         assertEquals("User was not found", jsonAnswer.getString("result"));
     }

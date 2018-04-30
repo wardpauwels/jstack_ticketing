@@ -8,6 +8,7 @@ import be.ward.ticketing.util.ticket.AssociationTypes;
 import be.ward.ticketing.util.ticket.Constants;
 import be.ward.ticketing.util.ticket.Messages;
 import jersey.repackaged.com.google.common.collect.Lists;
+import org.json.JSONObject;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -52,8 +53,8 @@ public class TicketController {
     }
 
     @PostMapping
-    public Ticket createNewTicket(@RequestParam String username, @RequestParam String message) {
-        Ticket ticket = ticketService.createTicket(username, message);
+    public Ticket createNewTicket(@RequestBody JSONObject ticketDetails) {
+        Ticket ticket = ticketService.createTicket(ticketDetails.getString("username"), ticketDetails.getString("message"));
         Association association = associationService.createAssociation(AssociationTypes.ticket, ticket);
 
         rabbitTemplate.convertAndSend(Constants.VAR_DEFAULT_EXCHANGE, Messages.MSG_NEW_TICKET, association.getId());
@@ -61,10 +62,10 @@ public class TicketController {
     }
 
     @PostMapping("/answers/{ticketId}")
-    public Ticket answerOnTicketWithId(@PathVariable String ticketId, @RequestParam String user, @RequestParam String answer) {
+    public Ticket answerOnTicketWithId(@PathVariable String ticketId, @RequestBody JSONObject aswerDetails) {
         Ticket oldTicket = ticketService.findTicket(Long.valueOf(ticketId));
         Association latestAssociation = associationService.getLastAssociationFromTicket(oldTicket);
-        Ticket newTicket = ticketService.answerOnTicketWithId(latestAssociation.getTicket().getId(), user, answer);
+        Ticket newTicket = ticketService.answerOnTicketWithId(latestAssociation.getTicket().getId(), aswerDetails.getString("user"), aswerDetails.getString("answer"));
 
         rabbitTemplate.convertAndSend(Constants.VAR_DEFAULT_EXCHANGE, Messages.MSG_TICKET_ANSWERED, oldTicket.getId());
         return newTicket;
@@ -80,11 +81,11 @@ public class TicketController {
     }
 
     @PostMapping("/notsolved/{ticketId}")
-    public Ticket ticketNotSolved(@PathVariable String ticketId, @RequestParam String comment) {
+    public Ticket ticketNotSolved(@PathVariable String ticketId, @RequestBody JSONObject comment) {
         Association association = associationService.getTopAssociationFromTicket(ticketService.findTicket(Long.valueOf(ticketId)));
         Ticket ticket = association.getTicket();
 
-        rabbitTemplate.convertAndSend(Constants.VAR_DEFAULT_EXCHANGE, Messages.MSG_PROBLEM_NOT_SOLVED, new Object[]{ticket.getId(), comment});
+        rabbitTemplate.convertAndSend(Constants.VAR_DEFAULT_EXCHANGE, Messages.MSG_PROBLEM_NOT_SOLVED, new Object[]{ticket.getId(), comment.getString("comment")});
         return ticket;
     }
 }

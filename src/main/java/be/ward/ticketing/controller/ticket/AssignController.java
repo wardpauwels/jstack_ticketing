@@ -8,8 +8,8 @@ import org.json.JSONObject;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,14 +27,14 @@ public class AssignController {
     }
 
     @PostMapping("/usertoticket")
-    public String assignUserToTicket(@RequestParam String ticketId, @RequestParam String assignedUser) {
-        Ticket ticket = assignService.addResolverToTicket(Long.valueOf(ticketId), assignedUser);
+    public String assignUserToTicket(@RequestBody JSONObject assignDetails) {
+        Ticket ticket = assignService.addResolverToTicket(assignDetails.getLong("ticketId"), assignDetails.getString("assignedUser"));
 
         if (ticket != null) {
             rabbitTemplate.convertAndSend(Constants.VAR_DEFAULT_EXCHANGE, Messages.MSG_RESOLVER_ADDED, ticket.getId());
             return makeJsonObject("User has been added to ticket");
         } else {
-            rabbitTemplate.convertAndSend(Constants.VAR_DEFAULT_EXCHANGE, Messages.MSG_RESOLVER_NOT_FOUND, assignedUser);
+            rabbitTemplate.convertAndSend(Constants.VAR_DEFAULT_EXCHANGE, Messages.MSG_RESOLVER_NOT_FOUND, assignDetails.getString("assignedUser"));
             return makeJsonObject("User was not found");
         }
     }
