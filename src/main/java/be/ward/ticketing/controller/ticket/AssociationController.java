@@ -35,4 +35,9 @@ public class AssociationController {
     public List<Association> getAllGroupedAssociations() {
         return associationService.getAllGroupedAssociations();
     }
+
+    @GetMapping("/groups/{associationId}")
+    public List<Association> getAllGroupedAssociationsForId(@PathVariable String associationId) {
+        return associationService.getAssociationsGroupedAsListFromTopId(associationId);
+    }
 }

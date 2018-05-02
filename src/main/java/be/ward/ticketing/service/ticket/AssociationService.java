@@ -82,4 +82,17 @@ public class AssociationService {
         }
         return topAssociations;
     }
+
+    public List<Association> getAssociationsGroupedAsListFromTopId(String associationId) {
+        List<Association> associationsList = new ArrayList<>();
+        Association association = associationRepository.findOne(Long.valueOf(associationId));
+        associationsList.add(association);
+
+        while (association.getAssociation() != null) {
+            association = association.getAssociation();
+            associationsList.add(association);
+        }
+
+        return associationsList;
+    }
 }

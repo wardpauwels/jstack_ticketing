@@ -4,9 +4,9 @@ import be.ward.ticketing.entities.user.User;
 import be.ward.ticketing.service.user.UserService;
 import jersey.repackaged.com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -31,8 +31,8 @@ public class UserController {
     }
 
     @GetMapping("/loggedin")
-    public org.springframework.security.core.userdetails.User getLoggedUser() {
-        return (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public Principal getLoggedUser(Principal principal) {
+        return principal;
     }
 
     @PostMapping

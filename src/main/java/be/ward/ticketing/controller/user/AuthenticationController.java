@@ -23,5 +23,4 @@ public class AuthenticationController {
     public Object authenticate(@RequestBody User user) {
         return authenticationService.login(user);
     }
-
 }
