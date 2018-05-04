@@ -1,7 +1,7 @@
 package be.ward.ticketing.controller.user;
 
 import be.ward.ticketing.entities.user.User;
-import be.ward.ticketing.service.user.UserService;
+import be.ward.ticketing.service.user.UserDetailsService;
 import jersey.repackaged.com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 public class UserControllerTest {
 
     @Mock
-    private UserService userService;
+    private UserDetailsService userDetailsService;
 
     @InjectMocks
     private UserController userController;
@@ -30,7 +30,7 @@ public class UserControllerTest {
     public void getAllUsersTest() {
         User userWard = new User("ward", "password");
         User userBert = new User("bert", "hackerman");
-        when(userService.findAllUsers()).thenReturn(Lists.newArrayList(userWard, userBert));
+        when(userDetailsService.findAllUsers()).thenReturn(Lists.newArrayList(userWard, userBert));
 
         List<User> users = userController.getAllUsers();
 
@@ -43,7 +43,7 @@ public class UserControllerTest {
     @Test
     public void getUserByUsernameTest() {
         User userWard = new User("ward", "password");
-        when(userService.findUserWithUsername("ward")).thenReturn(userWard);
+        when(userDetailsService.findUserWithUsername("ward")).thenReturn(userWard);
 
         User askedUser = userController.getUserByUsername("ward");
 
@@ -54,7 +54,7 @@ public class UserControllerTest {
     @Test
     public void makeNewUserTest() {
         User userBert = new User("bert", "hackerman");
-        when(userService.createUser("bert", "hackerman")).thenReturn(userBert);
+        when(userDetailsService.createUser("bert", "hackerman")).thenReturn(userBert);
 
         User user = userController.makeNewUser(new User("bert", "hackerman"));
 

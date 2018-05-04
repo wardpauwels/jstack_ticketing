@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
-public class UserServiceTest {
+public class UserDetailsServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -30,7 +30,7 @@ public class UserServiceTest {
     private PasswordEncoder encoder;
 
     @InjectMocks
-    private UserService userService;
+    private UserDetailsService userDetailsService;
 
     private User userWard;
     private User userBert;
@@ -47,7 +47,7 @@ public class UserServiceTest {
         when(userRepository.save(userWard)).thenReturn(userWard);
         when(encoder.encode(userWard.getPassword())).thenReturn("pauwels");
 
-        User newUser = userService.createUser(userWard.getUsername(), userWard.getPassword());
+        User newUser = userDetailsService.createUser(userWard.getUsername(), userWard.getPassword());
 
         assertNotNull(newUser);
     }
@@ -55,7 +55,7 @@ public class UserServiceTest {
     @Test
     public void findAllUsersTest() {
         when(userRepository.findAll()).thenReturn(Lists.newArrayList(userWard, userBert));
-        List<User> users = Lists.newArrayList(userService.findAllUsers());
+        List<User> users = Lists.newArrayList(userDetailsService.findAllUsers());
 
         assertNotNull(users);
         assertEquals(2, users.size());
@@ -68,7 +68,7 @@ public class UserServiceTest {
     @Test
     public void findUserWithUsernameTest() {
         when(userRepository.findUserByUsername("bert")).thenReturn(userBert);
-        User user = userService.findUserWithUsername("bert");
+        User user = userDetailsService.findUserWithUsername("bert");
 
         assertNotNull(user);
         assertEquals(userBert.getUsername(), user.getUsername());

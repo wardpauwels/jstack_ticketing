@@ -4,18 +4,22 @@ import be.ward.ticketing.data.user.RoleRepository;
 import be.ward.ticketing.data.user.UserRepository;
 import be.ward.ticketing.entities.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static java.util.Collections.emptyList;
+
 @Service
-public class UserService {
+public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final RoleRepository roleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder encoder, RoleRepository roleRepository) {
+    public UserDetailsService(UserRepository userRepository, PasswordEncoder encoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.roleRepository = roleRepository;
@@ -33,5 +37,11 @@ public class UserService {
 
     public User findUserWithUsername(String username) {
         return userRepository.findUserByUsername(username);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findUserByUsername(username);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), emptyList());
     }
 }

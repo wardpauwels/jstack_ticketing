@@ -4,6 +4,7 @@ import be.ward.ticketing.entities.ticketing.Association;
 import be.ward.ticketing.entities.ticketing.Ticket;
 import be.ward.ticketing.service.ticket.AssociationService;
 import be.ward.ticketing.service.ticket.TicketService;
+import be.ward.ticketing.util.annotation.Admin;
 import be.ward.ticketing.util.ticket.AssociationTypes;
 import be.ward.ticketing.util.ticket.Constants;
 import be.ward.ticketing.util.ticket.Messages;
@@ -32,6 +33,7 @@ public class TicketController {
         this.associationService = associationService;
     }
 
+    @Admin
     @GetMapping
     public List<Ticket> findAllTickets() {
         return Lists.newArrayList(ticketService.findAllTickets());

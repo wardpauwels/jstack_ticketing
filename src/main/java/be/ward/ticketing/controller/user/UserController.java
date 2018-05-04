@@ -1,7 +1,7 @@
 package be.ward.ticketing.controller.user;
 
 import be.ward.ticketing.entities.user.User;
-import be.ward.ticketing.service.user.UserService;
+import be.ward.ticketing.service.user.UserDetailsService;
 import jersey.repackaged.com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,21 +13,21 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
     @GetMapping
     public List<User> getAllUsers() {
-        return Lists.newArrayList(userService.findAllUsers());
+        return Lists.newArrayList(userDetailsService.findAllUsers());
     }
 
     @GetMapping("/{username}")
     public User getUserByUsername(@PathVariable String username) {
-        return userService.findUserWithUsername(username);
+        return userDetailsService.findUserWithUsername(username);
     }
 
     @GetMapping("/loggedin")
@@ -37,6 +37,6 @@ public class UserController {
 
     @PostMapping
     public User makeNewUser(@RequestBody User user) {
-        return userService.createUser(user.getUsername(), user.getPassword());
+        return userDetailsService.createUser(user.getUsername(), user.getPassword());
     }
 }

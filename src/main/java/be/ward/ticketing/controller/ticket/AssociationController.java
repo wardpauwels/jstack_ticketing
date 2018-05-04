@@ -2,6 +2,7 @@ package be.ward.ticketing.controller.ticket;
 
 import be.ward.ticketing.entities.ticketing.Association;
 import be.ward.ticketing.service.ticket.AssociationService;
+import be.ward.ticketing.util.annotation.Admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ public class AssociationController {
         return associationService.findAssociation(Long.valueOf(associationId));
     }
 
+    @Admin
     @GetMapping("/groups")
     public List<Association> getAllGroupedAssociations() {
         return associationService.getAllGroupedAssociations();
